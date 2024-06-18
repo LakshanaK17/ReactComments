@@ -82,6 +82,15 @@ const incrementLikes = (id) => {
   return null;
 };
 
+const decrementLikes = (id) => {
+  const index = comments.findIndex(comment => comment.id === parseInt(id));
+  if (index !== -1 && comments[index].likes > 0) {
+    comments[index].likes -= 1;
+    return comments[index];
+  }
+  return null;
+};
+
 const addReply = (id, { username, message }) => {
     const index = comments.findIndex(comment => comment.id === Number(id));
     if (index !== -1) {
@@ -104,5 +113,6 @@ module.exports = {
   updateComment,
   deleteComment,
   incrementLikes,
+  decrementLikes,
   addReply,
 };

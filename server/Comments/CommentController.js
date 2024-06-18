@@ -4,6 +4,7 @@ const {
   updateComment,
   deleteComment,
   incrementLikes,
+  decrementLikes,
   addReply,
 } = require("./CommentModel");
 
@@ -43,33 +44,41 @@ const removeComment = (req, res) => {
 };
 
 const likeComment = (req, res) => {
-    const { id } = req.params;
-    const updatedComment = incrementLikes(id);
-    if (updatedComment) {
-      res.json(updatedComment);
-    } else {
-      res.status(404).json({ error: "Comment not found" });
-    }
-  };
-  
-  const replyToComment = (req, res) => {
-    const { id } = req.params;
-    const { username, message } = req.body;
-    
-    if (!username || !message) {
-      return res.status(400).json({ error: "Username and message are required" });
-    }
-  
-    const reply = addReply(id, { username, message });
-  
-    if (reply) {
-      res.json(reply); // Return the newly added reply
-    } else {
-      res.status(404).json({ error: "Comment not found" });
-    }
-  };
-  
-  
+  const { id } = req.params;
+  const updatedComment = incrementLikes(id);
+  if (updatedComment) {
+    res.json(updatedComment);
+  } else {
+    res.status(404).json({ error: "Comment not found" });
+  }
+};
+
+const dislikeComment = (req, res) => {
+  const { id } = req.params;
+  const updatedComment = decrementLikes(id);
+  if (updatedComment) {
+    res.json(updatedComment);
+  } else {
+    res.status(404).json({ error: "Comment not found" });
+  }
+};
+
+const replyToComment = (req, res) => {
+  const { id } = req.params;
+  const { username, message } = req.body;
+
+  if (!username || !message) {
+    return res.status(400).json({ error: "Username and message are required" });
+  }
+
+  const reply = addReply(id, { username, message });
+
+  if (reply) {
+    res.json(reply); 
+  } else {
+    res.status(404).json({ error: "Comment not found" });
+  }
+};
 
 module.exports = {
   fetchComments,
@@ -77,5 +86,6 @@ module.exports = {
   editComment,
   removeComment,
   likeComment,
+  dislikeComment,
   replyToComment,
 };

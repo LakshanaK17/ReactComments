@@ -5,6 +5,7 @@ const {
   editComment,
   removeComment,
   likeComment,
+  dislikeComment,
   replyToComment,
 } = require("./CommentController");
 
@@ -16,5 +17,6 @@ router.put("/comments/:id", editComment);
 router.delete("/comments/:id", removeComment);
 router.post("/comments/:id/replies", replyToComment);
 router.put("/comments/:id/like", likeComment);
+router.put("/comments/:id/dislike", dislikeComment); 
 
 module.exports = router;
