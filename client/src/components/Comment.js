@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Avatar, Typography, IconButton, Button, TextField } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown'; // Import the dislike icon
 import ReplyIcon from '@mui/icons-material/Reply';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { updateExistingComment, deleteExistingComment, incrementCommentLikes, addReplyToComment } from '../features/comments/commentsSlice';
+import { updateExistingComment, deleteExistingComment, incrementCommentLikes, decrementCommentLikes, addReplyToComment } from '../features/comments/commentsSlice'; // Import decrement action
 
 const Comment = ({ comment }) => {
   const dispatch = useDispatch();
@@ -46,12 +47,20 @@ const Comment = ({ comment }) => {
     }
   };
 
+  const handleDislike = async () => {
+    try {
+      await dispatch(decrementCommentLikes(comment.id));
+    } catch (error) {
+      console.error('Error disliking comment:', error);
+    }
+  };
+
   const handleReply = async () => {
     try {
-      // Dispatch addReplyToComment action to add the reply
+      
       await dispatch(addReplyToComment({ commentId: comment.id, content: replyContent }));
 
-      // Reset reply content and exit reply mode
+      
       setReplyContent('');
       setReplyMode(false);
     } catch (error) {
@@ -130,6 +139,9 @@ const Comment = ({ comment }) => {
           <Typography variant="caption" color="textSecondary" ml={0.5} sx={{ color: '#14C602' }}>
             {comment.likes}
           </Typography>
+          <IconButton size="small" color="default" onClick={handleDislike}> 
+            <ThumbDownIcon fontSize="small" sx={{ color: '#C60802' }} />
+          </IconButton>
         </Box>
 
         {replies.map(reply => (
